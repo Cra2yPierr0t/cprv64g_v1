@@ -1,6 +1,7 @@
 module cprv_id_stage #(
     parameter INSTR_WIDTH   = 32,
-    parameter DATA_WIDTH    = 64
+    parameter DATA_WIDTH    = 64,
+    parameter IMM_WIDTH     = 32,
 )(
     input   logic                   clk,
     // data from if stage
@@ -34,6 +35,11 @@ module cprv_id_stage #(
     logic [DATA_WIDTH-1:0] rs2_data_ex_o_rin;
     logic [4:0]            rd_addr_ex_o_r;
     logic [4:0]            rd_addr_ex_o_rin;
+    logic                  rd_en_ex_o_r;
+    logic                  rd_en_ex_o_rin;
+    
+    logic [W_WIDTH-1:0]    imm_data_ex_o_r;
+    logic [W_WIDTH-1:0]    imm_data_ex_o_rin;
 
     logic [6:0]            opcode_ex_o_r;
     logic [6:0]            opcode_ex_o_rin;
@@ -56,8 +62,13 @@ module cprv_id_stage #(
                 LOAD        : rd_en_ex_o_rin = 1;
                 default     : rd_en_ex_o_rin = 0;
             endcase
-            //imm_data_ex_o_rin
-            
+            case(opcode_ex_o_rin)
+                OP_IMM      : imm_data_ex_o_rin = W_WIDTH'(signed'(instr_data_id_i[31:20]));
+                OP_IMM_32   : imm_data_ex_o_rin = W_WIDTH'(signed'(instr_data_id_i[31:20]));
+                LOAD        : imm_data_ex_o_rin = W_WIDTH'(signed'(instr_data_id_i[31:20]));
+                STORE       : imm_data_ex_o_rin = W_WIDTH'(signed'({instr_data_id_i[31:25], instr_data_id_i[11:7]}))
+                default     : imm_data_ex_o_rin = '0;
+            endcase
             opcode_ex_o_rin     = instr_data_id_i[6:0];
             funct3_ex_o_rin     = instr_data_id_i[14:12];
             funct7_ex_o_rin     = instr_data_id_i[31:25];
@@ -66,8 +77,8 @@ module cprv_id_stage #(
             rs1_data_ex_o_rin   = rs1_data_ex_o_r;
             rs2_data_ex_o_rin   = rs2_data_ex_o_r;
             rd_addr_ex_o_rin    = rd_addr_ex_o_r;
-            //rd_en_ex_o_rin
-            //imm_data_ex_o_rin
+            rd_en_ex_o_rin      = rd_en_ex_o_r;
+            imm_data_ex_o_rin   = imm_data_ex_o_r;
             opcode_ex_o_rin     = opcode_ex_o_r;
             funct3_ex_o_rin     = funct3_ex_o_r;
             funct7_ex_o_rin     = funct7_ex_o_r;
@@ -76,6 +87,8 @@ module cprv_id_stage #(
         rs1_data_ex_o   = rs1_data_ex_o_r;
         rs2_data_ex_o   = rs2_data_ex_o_r;
         rd_addr_ex_o    = rd_addr_ex_o_r;
+        rd_en_ex_o      = rd_en_ex_o_r;
+        imm_data_ex_o   = imm_data_ex_o_r;
         opcode_ex_o     = opcode_ex_o_r;
         funct3_ex_o     = funct3_ex_o_r;
         funct7_ex_o     = funct7_ex_o_r;
@@ -88,6 +101,8 @@ module cprv_id_stage #(
         rs1_data_ex_o_r <= rs1_data_ex_o_rin;
         rs2_data_ex_o_r <= rs2_data_ex_o_rin;
         rd_addr_ex_o_r  <= rd_addr_ex_o_rin;
+        rd_w_en_ex_o_r  <= rd_w_en_ex_o_rin;
+        imm_data_ex_o_r <= imm_data_ex_o_rin;
         opcode_ex_o_r   <= opcode_ex_o_rin;
         funct3_ex_o_r   <= funct3_ex_o_rin;
         funct7_ex_o_r   <= funct7_ex_o_rin;
