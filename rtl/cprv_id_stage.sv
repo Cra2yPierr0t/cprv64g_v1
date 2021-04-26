@@ -48,12 +48,16 @@ module cprv_id_stage #(
             rs1_data_ex_o_rin   = rs1_data_wb_o;
             rs2_data_ex_o_rin   = rs2_data_wb_o;
             rd_addr_ex_o_rin    = instr_data_id_i[11:7];
-            //rd_en_ex_o_rin
             case(opcode_ex_o_rin)
-                REG_REG_OP :
-                REG_IMM_OP
+                OP          : rd_en_ex_o_rin = 1;
+                OP_IMM      : rd_en_ex_o_rin = 1;
+                OP_32       : rd_en_ex_o_rin = 1;
+                OP_IMM_32   : rd_en_ex_o_rin = 1;
+                LOAD        : rd_en_ex_o_rin = 1;
+                default     : rd_en_ex_o_rin = 0;
             endcase
             //imm_data_ex_o_rin
+            
             opcode_ex_o_rin     = instr_data_id_i[6:0];
             funct3_ex_o_rin     = instr_data_id_i[14:12];
             funct7_ex_o_rin     = instr_data_id_i[31:25];
