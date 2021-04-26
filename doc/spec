@@ -1,0 +1,35 @@
+spec
+Sv39
+2 stage(CAL/WB)
+
+fe / dec / ex / mem / wb
+
+fe <- v&r no slave
+
+fe_logic fe_regs | dec_logic dec_regs | ...
+
+imem(s) -> (s)fe(m) -> dec(m)
+
+              -> dmem(m)
+              |
+ex(s) -> (s)mem(m) -> wb(m)
+              ^
+     dmem(s) -|
+
+wb(s) -> (s)wb(m) -> (m)dmem
+
+どんな動きをして欲しい？
+imemからvalidなデータが来たらpcをインクリメントしてvalid, そんでimemがreadyになったらpcをインクリメント x
+pcをインクリメントしてvalid, そんでimemがreadyになったらpcをインクリメント o
+imemへのvalidって常にHighでは
+
+
+           __    __    __    __    __    __    __
+clk     __/  \__/  \__/  \__/  \__/  \__/  \__/  \__
+pc       | pc+4| pc+8| pc+c|pc+10   
+data     |*pc  |*pc+4|*pc+8|*pc+c
+         ____________________________________________
+valid   /
+        _
+ready    \___
+

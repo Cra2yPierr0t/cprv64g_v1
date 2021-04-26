@@ -1,0 +1,7 @@
+implement only RV64I
+implement CSR
+implement Interrupt
+implement another Extensions
+implement PMP
+running xv6?
+implement cache?
