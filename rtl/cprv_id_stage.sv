@@ -41,8 +41,8 @@ module cprv_id_stage #(
     logic [W_WIDTH-1:0]    imm_data_ex_o_r;
     logic [W_WIDTH-1:0]    imm_data_ex_o_rin;
 
-    logic                  mem_en_ex_o_r;
-    logic                  mem_en_ex_o_rin;
+    logic                  mem_w_en_ex_o_r;
+    logic                  mem_w_en_ex_o_rin;
 
     logic [6:0]            opcode_ex_o_r;
     logic [6:0]            opcode_ex_o_rin;
