@@ -1,3 +1,12 @@
+//
+// ex -> mem -> wb
+//        ^| addr, w_en, wdata
+//   rdata|v
+//       dmem
+//
+// store命令なら to dmemのデータ転送完了と from wbのready待ち合わせ
+// load命令なら to dmemのデータ転送完了と from dmemのデータ転送完了と from wbのreadyを待ち合わせ
+
 module cprv_mem_stage #(
 )(
     input   logic                   clk,
@@ -38,4 +47,83 @@ module cprv_mem_stage #(
     output  logic [DATA_WIDTH-1:0]  wdata_dmem_o,
     output  logic                   w_en_dmem_o
 );
+
+    logic                   cke_wb;
+
+    logic [DATA_WIDTH-1:0]  rs1_data_wb_o_r;
+    logic [DATA_WIDTH-1:0]  rs1_data_wb_o_rin;
+    logic [DATA_WIDTH-1:0]  rs2_data_wb_o_r;
+    logic [DATA_WIDTH-1:0]  rs2_data_wb_o_rin;
+    logic [4:0]             rd_addr_wb_o_r;
+    logic [4:0]             rd_addr_wb_o_rin;
+    logic                   rd_en_wb_o_r;
+    logic                   rd_en_wb_o_rin;
+
+    logic [W_WIDTH-1:0]     imm_data_wb_o_r;
+    logic [W_WIDTH-1:0]     imm_data_wb_o_rin;
+
+    logic                   mem_w_en_wb_o_r;
+    logic                   mem_w_en_wb_o_rin;
+
+    logic [6:0]             opcode_wb_o_r;
+    logic [6:0]             opcode_wb_o_rin;
+    logic [2:0]             funct3_wb_o_r;
+    logic [2:0]             funct3_wb_o_rin;
+    logic [6:0]             funct7_wb_o_r;
+    logic [6:0]             funct7_wb_o_rin;
+    
+    logic [DATA_WIDTH-1:0]  alu_out_wb_o_r;
+    logic [DATA_WIDTH-1:0]  alu_out_wb_o_rin;
+
+    always_comb begin
+        if(cke_wb) begin
+            alu_out_wb_o_rin   = alu_out_mem_i;
+            rs1_data_wb_o_rin  = rs1_data_mem_i;
+            rs2_data_wb_o_rin  = rs2_data_mem_i;
+            rd_addr_wb_o_rin   = rd_addr_mem_i;
+            rd_en_wb_o_rin     = rd_en_mem_i;
+            imm_data_wb_o_rin  = imm_data_mem_i;
+            opcode_wb_o_rin    = opcode_mem_i;
+            funct3_wb_o_rin    = funct3_mem_i;
+            funct7_wb_o_rin    = funct7_mem_i;
+            mem_w_en_wb_o_rin  = mem_w_en_mem_i;
+        end else begin
+            alu_out_wb_o_rin   = alu_out_wb_o_r;
+            rs1_data_wb_o_rin  = rs1_data_wb_o_r;
+            rs2_data_wb_o_rin  = rs2_data_wb_o_r;
+            rd_addr_wb_o_rin   = rd_addr_wb_o_r;
+            rd_en_wb_o_rin     = rd_en_wb_o_r;
+            imm_data_wb_o_rin  = imm_data_wb_o_r;
+            opcode_wb_o_rin    = opcode_wb_o_r;
+            funct3_wb_o_rin    = funct3_wb_o_r;
+            funct7_wb_o_rin    = funct7_wb_o_r;
+            mem_w_en_wb_o_rin  = mem_w_en_wb_o_r;
+        end
+        rs1_data_wb_o   = rs1_data_wb_o_r;
+        rs2_data_wb_o   = rs2_data_wb_o_r;
+        rd_addr_wb_o    = rd_addr_wb_o_r;
+        rd_en_wb_o      = rd_en_wb_o_r;
+        imm_data_wb_o   = imm_data_wb_o_r;
+        opcode_wb_o     = opcode_wb_o_r;
+        funct3_wb_o     = funct3_wb_o_r;
+        funct7_wb_o     = funct7_wb_o_r;
+        mem_w_en_wb_o   = mem_w_en_wb_r;
+    end
+    always_ff @(posedge clk) begin
+        valid_wb_o      <= valid_mem_i;
+        alu_out_wb_o_r  <= alu_out_wb_o_rin;
+        rs1_data_wb_o_r <= rs1_data_wb_o_rin;
+        rs2_data_wb_o_r <= rs2_data_wb_o_rin;
+        rd_addr_wb_o_r  <= rd_addr_wb_o_rin;
+        rd_w_en_wb_o_r  <= rd_w_en_wb_o_rin;
+        imm_data_wb_o_r <= imm_data_wb_o_rin;
+        opcode_wb_o_r   <= opcode_wb_o_rin;
+        funct3_wb_o_r   <= funct3_wb_o_rin;
+        funct7_wb_o_r   <= funct7_wb_o_rin;
+        mem_w_en_wb_o_r <= mem_en_wb_o_rin;
+    end
+    always_comb begin
+        cke_wb          = ~valid_wb_o | ~ready_wb_i;
+        ready_mem_o     = cke_wb;
+    end
 endmodule
