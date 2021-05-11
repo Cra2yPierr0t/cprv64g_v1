@@ -2,9 +2,24 @@ module cprv_cpu #(
     parameter DATA_WIDTH = 64
 )(
     input   logic                  clk,
+    
+    input   logic                  valid_if,
+    output  logic                  ready_if,
+    input   logic [DATA_WIDTH-1:0] instr_data_imem,
 
-    output  logic [DATA_WIDTH-1:0] instr_addr,
-    input   logic [DATA_WIDTH-1:0] instr_data,
+    output  logic                  valid_imem,
+    input   logic                  ready_imem,
+    output  logic [DATA_WIDTH-1:0] instr_addr_imem,
+
+    input   logic                  valid_mem_dmem,
+    output  logic                  ready_mem_dmem,
+    input   logic [DATA_WIDTH-1:0] rdata_dmem,
+
+    output  logic                  valid_dmem,
+    input   logic                  ready_dmem,
+    output  logic [ADDR_WIDTH-1:0] addr_dmem,
+    output  logic [DATA_WIDTH-1:0] wdata_dmem,
+    output  logic                  w_en_dmem,
 
     output  logic [DATA_WIDTH-1:0] mem_addr,
     output  logic                  mem_w_en,
@@ -14,14 +29,6 @@ module cprv_cpu #(
 
     logic [DATA_WIDTH-1:0] instr_addr_r;
     logic [DATA_WIDTH-1:0] instr_addr_rin;
-
-    logic                  valid_if;
-    logic                  ready_if;
-    logic [31:0]           instr_data_imem;
-
-    logic                  valid_imem;
-    logic                  ready_imem;
-    logic [ADDR_WIDTH-1:0] instr_addr_imem;
 
     logic                  valid_id;
     logic                  ready_id;
@@ -81,16 +88,6 @@ module cprv_cpu #(
     logic [2:0]            funct7_wb;
     logic [DATA_WIDTH-1:0] alu_out_wb;
     logic [DATA_WIDTH-1:0] mem_data_wb;
-
-    logic                  valid_mem_dmem;
-    logic                  ready_mem_dmem;
-    logic [DATA_WIDTH-1:0] rdata_dmem;
-
-    logic                  valid_dmem;
-    logic                  ready_dmem;
-    logic [ADDR_WIDTH-1:0] addr_dmem;
-    logic [DATA_WIDTH-1:0] wdata_dmem;
-    logic                  w_en_dmem;
 
     cprv_if_stage #(
     ) if_stage (
