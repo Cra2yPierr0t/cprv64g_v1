@@ -22,6 +22,8 @@ module cprv_wb_stage #(
     input   logic [DATA_WIDTH-1:0]  rs1_data_wb_o,
     input   logic [DATA_WIDTH-1:0]  rs2_data_wb_o,
 );
+    parameter OP        = 7'b01_100_11;
+    parameter LOAD      = 7'b00_000_11;
 
     logic [DATA_WIDTH-1:0] rd_data;
 

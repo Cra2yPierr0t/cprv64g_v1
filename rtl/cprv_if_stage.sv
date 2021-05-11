@@ -19,7 +19,7 @@ module cprv_if_stage #(
 
     logic cke_id, cke_imem;
 
-    logic [INSTR_WIDTH-1:0] instr_addr_r;
+    logic [INSTR_WIDTH-1:0] instr_addr_r = '0;
     logic [INSTR_WIDTH-1:0] instr_addr_rin;
 
     // update program counter

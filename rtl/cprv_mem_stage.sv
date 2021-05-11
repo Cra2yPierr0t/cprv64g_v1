@@ -47,6 +47,8 @@ module cprv_mem_stage #(
     output  logic [DATA_WIDTH-1:0]  wdata_dmem_o,
     output  logic                   w_en_dmem_o
 );
+    parameter LOAD      = 7'b00_000_11;
+    parameter STORE     = 7'b01_000_11;
 
     logic                   cke_wb;
     logic                   cke_dmem;

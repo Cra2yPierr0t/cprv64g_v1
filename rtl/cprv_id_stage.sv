@@ -27,8 +27,14 @@ module cprv_id_stage #(
     output  logic [DATA_WIDTH-1:0]  rs2_data_wb_i,
 );
 
-    logic                  cke_ex;
+    parameter OP        = 7'b01_100_11;
+    parameter OP_IMM    = 7'b00_100_11;
+    parameter OP_32     = 7'b01_110_11;
+    parameter OP_IMM_32 = 7'b00_110_11;
+    parameter LOAD      = 7'b00_000_11;
+    parameter STORE     = 7'b01_000_11;
 
+    logic                  cke_ex;
     logic [DATA_WIDTH-1:0] rs1_data_ex_o_r;
     logic [DATA_WIDTH-1:0] rs1_data_ex_o_rin;
     logic [DATA_WIDTH-1:0] rs2_data_ex_o_r;
