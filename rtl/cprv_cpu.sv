@@ -15,6 +15,82 @@ module cprv_cpu #(
     logic [DATA_WIDTH-1:0] instr_addr_r;
     logic [DATA_WIDTH-1:0] instr_addr_rin;
 
+    logic                  valid_if;
+    logic                  ready_if;
+    logic [31:0]           instr_data_imem;
+
+    logic                  valid_imem;
+    logic                  ready_imem;
+    logic [ADDR_WIDTH-1:0] instr_addr_imem;
+
+    logic                  valid_id;
+    logic                  ready_id;
+    logic [31:0]           instr_data_id;
+
+    logic                  valid_ex;
+    logic                  ready_ex;
+    logic [DATA_WIDTH-1:0] rs1_data_ex;
+    logic [DATA_WIDTH-1:0] rs2_data_ex;
+    logic [4:0]            rd_addr_ex;
+    logic                  rd_en_ex;
+    logic [DATA_WIDTH-1:0] imm_data_ex;
+    logic [6:0]            opcode_ex;
+    logic [2:0]            funct3_ex;
+    logic [6:0]            funct7_ex;
+    logic                  mem_w_en_ex;
+
+    logic [4:0]            rs1_addr_wb;
+    logic [4:0]            rs2_addr_wb;
+    logic [DATA_WIDTH-1:0] rs1_data_wb_r;
+    logic [DATA_WIDTH-1:0] rs2_data_wb_r;
+
+    logic                  valid_ex;
+    logic                  ready_ex;
+    logic [DATA_WIDTH-1:0] rs1_data_ex;
+    logic [DATA_WIDTH-1:0] rs2_data_ex;
+    logic [4:0]            rd_addr_ex;
+    logic                  rd_en_ex;
+    logic [DATA_WIDTH-1:0] imm_data_ex;
+    logic [6:0]            opcode_ex;
+    logic [2:0]            funct3_ex;
+    logic [2:0]            funct7_ex;
+    logic                  mem_w_en_ex;
+
+    logic                  valid_mem;
+    logic                  ready_mem;
+    logic [DATA_WIDTH-1:0] rs1_data_mem;
+    logic [DATA_WIDTH-1:0] rs2_data_mem;
+    logic [4:0]            rd_addr_mem;
+    logic                  rd_en_mem;
+    logic [DATA_WIDTH-1:0] imm_data_mem;
+    logic [6:0]            opcode_mem;
+    logic [2:0]            funct3_mem;
+    logic [2:0]            funct7_mem;
+    logic                  mem_w_en_mem;
+    logic [DATA_WIDTH-1:0] alu_out_mem;
+
+    logic                  valid_wb;
+    logic                  ready_wb;
+    logic [DATA_WIDTH-1:0] rs1_data_wb;
+    logic [DATA_WIDTH-1:0] rs2_data_wb;
+    logic [4:0]            rd_addr_wb;
+    logic                  rd_en_wb;
+    logic [DATA_WIDTH-1:0] imm_data_wb;
+    logic [6:0]            opcode_wb;
+    logic [2:0]            funct3_wb;
+    logic [2:0]            funct7_wb;
+    logic [DATA_WIDTH-1:0] alu_out_wb;
+    logic [DATA_WIDTH-1:0] mem_data_wb;
+
+    logic                  valid_mem_dmem;
+    logic                  ready_mem_dmem;
+    logic [DATA_WIDTH-1:0] rdata_dmem;
+
+    logic                  valid_dmem;
+    logic                  ready_dmem;
+    logic [ADDR_WIDTH-1:0] addr_dmem;
+    logic [DATA_WIDTH-1:0] wdata_dmem;
+    logic                  w_en_dmem;
 
     cprv_if_stage #(
     ) if_stage (
@@ -36,7 +112,7 @@ module cprv_cpu #(
     cprv_id_stage #(
     ) id_stage (
         .clk                (clk            ),
-        // data from if stage
+        // data from if stage   
         .valid_id_i         (valid_id       ),
         .ready_id_o         (ready_id       ),
         .instr_data_id_i    (instr_data_id  ),
@@ -55,8 +131,8 @@ module cprv_cpu #(
         // data for wb stage
         .rs1_addr_wb_o      (rs1_addr_wb    ),
         .rs2_addr_wb_o      (rs2_addr_wb    ),
-        .rs1_data_wb_i      (rs1_data_wb    ),
-        .rs2_data_wb_i      (rs2_data_wb    ),
+        .rs1_data_wb_i      (rs1_data_wb_r  ),
+        .rs2_data_wb_i      (rs2_data_wb_r  ),
     );
 
     cprv_ex_stage #(
@@ -149,8 +225,8 @@ module cprv_cpu #(
         //data for register
         .rs1_addr_wb_i      (rs1_addr_wb    ),
         .rs2_addr_wb_i      (rs2_addr_wb    ),
-        .rs1_data_wb_o      (rs1_data_wb    ),
-        .rs2_data_wb_o      (rs2_data_wb    ),
+        .rs1_data_wb_o      (rs1_data_wb_r  ),
+        .rs2_data_wb_o      (rs2_data_wb_r  ),
     );
 
 endmodule
