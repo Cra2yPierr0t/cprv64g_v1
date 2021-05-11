@@ -123,7 +123,7 @@ module cprv_mem_stage #(
             valid_dmem_o_rin   = valid_mem_i;
             addr_dmem_o_rin    = rs1_data_mem_i + imm_data_mem_i;
             wdata_dmem_o_rin   = rs2_data_mem_i;
-            w_en_dmem_o_rin= w_en_mem_i;
+            w_en_dmem_o_rin    = w_en_mem_i;
         end else begin
             valid_dmem_o_rin   = valid_dmem_o_r;
             addr_dmem_o_rin    = addr_dmem_o_r;
