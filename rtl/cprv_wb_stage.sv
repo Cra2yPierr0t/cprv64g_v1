@@ -25,16 +25,14 @@ module cprv_wb_stage #(
     output  logic [DATA_WIDTH-1:0]  rs1_data_wb_o,
     output  logic [DATA_WIDTH-1:0]  rs2_data_wb_o
 );
-    parameter OP        = 7'b01_100_11;
     parameter LOAD      = 7'b00_000_11;
 
     logic [DATA_WIDTH-1:0] rd_data;
 
     always_comb begin
         case(opcode_wb_i) // 適当
-            OP      : rd_data   = alu_out_wb_i;
             LOAD    : rd_data   = mem_data_wb_i;
-            default : rd_data   = 'hx;
+            default : rd_data   = alu_out_wb_i;
         endcase
     end
 

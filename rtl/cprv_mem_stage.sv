@@ -151,6 +151,7 @@ module cprv_mem_stage #(
         funct3_wb_o     = funct3_wb_o_r;
         funct7_wb_o     = funct7_wb_o_r;
         w_en_wb_o       = w_en_wb_o_r;
+        alu_out_wb_o    = alu_out_wb_o_r;
     end
     always_ff @(posedge clk) begin
         valid_wb_o_r    <= valid_wb_o_rin;

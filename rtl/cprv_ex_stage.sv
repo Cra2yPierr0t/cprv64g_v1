@@ -105,6 +105,7 @@ module cprv_ex_stage #(
         funct3_mem_o    = funct3_mem_o_r;
         funct7_mem_o    = funct7_mem_o_r;
         mem_w_en_mem_o  = mem_w_en_mem_o_r;
+        alu_out_mem_o   = alu_out_mem_o_r;
     end
     always_ff @(posedge clk) begin
         valid_mem_o     <= valid_ex_i;

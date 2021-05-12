@@ -47,7 +47,7 @@ module cprv_top (
         .w_en_dmem      (w_en_data_w    )   
     );
 
-    cprv_ram_1p_w #(
+    cprv_rom_1p_w #(
         .DATA_WIDTH     (64     ), 
         .ADDR_WIDTH     (7      )
     ) imem (
