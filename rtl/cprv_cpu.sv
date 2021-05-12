@@ -20,11 +20,6 @@ module cprv_cpu #(
     output  logic [ADDR_WIDTH-1:0] addr_dmem,
     output  logic [DATA_WIDTH-1:0] wdata_dmem,
     output  logic                  w_en_dmem,
-
-    output  logic [DATA_WIDTH-1:0] mem_addr,
-    output  logic                  mem_w_en,
-    output  logic [DATA_WIDTH-1:0] mem_wdata,
-    input   logic [DATA_WIDTH-1:0] mem_rdata,
 );
 
     logic [DATA_WIDTH-1:0] instr_addr_r;
