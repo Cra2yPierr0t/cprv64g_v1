@@ -4,6 +4,8 @@ module cprv_top #(
 );
 
     cprv_cpu #(
+        .DATA_WIDTH     (64     ),
+        .ADDR_WIDTH     (7      )
     ) cpu (
         .clk            (clk    ),
         .valid_if       (valid_instr_d  ),
@@ -26,6 +28,8 @@ module cprv_top #(
     );
 
     cprv_ram_1p_w #(
+        .DATA_WIDTH     (64     ), 
+        .ADDR_WIDTH     (7      )
     ) imem (
         .clk        (clk            ),
         .valid_i    (valid_instr_a  ),
@@ -40,6 +44,8 @@ module cprv_top #(
     );
 
     cprv_ram_1p_w #(
+        .DATA_WIDTH     (64     ), 
+        .ADDR_WIDTH     (7      )
     ) dmem (
         .clk        (clk            ),
         .valid_i    (valid_data_w   ),

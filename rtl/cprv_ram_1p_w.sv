@@ -1,4 +1,6 @@
 module cprv_ram_1p_w #(
+    parameter ADDR_WIDTH    = 7,
+    parameter DATA_WIDTH    = 64
 )(
     input   logic                  clk,
 
@@ -19,6 +21,8 @@ module cprv_ram_1p_w #(
     logic valid_o_rin;
 
     cprv_ram_1p #(
+        .ADDR_WIDTH (ADDR_WIDTH),
+        .DATA_WIDTH (DATA_WIDTH)
     ) ram (
         .clk    (clk    ),
         .w_en   (w_en   ),

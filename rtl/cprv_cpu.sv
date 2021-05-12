@@ -1,5 +1,6 @@
 module cprv_cpu #(
-    parameter DATA_WIDTH = 64
+    parameter DATA_WIDTH = 64,
+    parameter ADDR_WIDTH = 7,
 )(
     input   logic                  clk,
     
@@ -85,6 +86,8 @@ module cprv_cpu #(
     logic [DATA_WIDTH-1:0] mem_data_wb;
 
     cprv_if_stage #(
+        .INSTR_WIDTH    (32         ),
+        .DATA_WIDTH     (DATA_WIDTH )
     ) if_stage (
         .clk                (clk            ),
         // data from instr mem
@@ -102,6 +105,9 @@ module cprv_cpu #(
     );
 
     cprv_id_stage #(
+        .INSTR_WIDTH    (32         ),
+        .DATA_WIDTH     (DATA_WIDTH ),
+        .IMM_WIDTH      (32         )
     ) id_stage (
         .clk                (clk            ),
         // data from if stage   
@@ -128,6 +134,8 @@ module cprv_cpu #(
     );
 
     cprv_ex_stage #(
+        .DATA_WIDTH     (DATA_WIDTH ),
+        .IMM_WIDTH      (32         )
     ) ex_stage (
         .clk                (clk            ),
         // data from id stage
@@ -158,6 +166,8 @@ module cprv_cpu #(
     );
 
     cprv_mem_stage #(
+        .DATA_WIDTH     (DATA_WIDTH ),
+        .IMM_WIDTH      (32         )
     ) mem_stage (
         .clk                (clk            ),
         // data from ex stage
@@ -199,6 +209,8 @@ module cprv_cpu #(
     );
 
     cprv_wb_stage #(
+        .DATA_WIDTH     (DATA_WIDTH ),
+        .IMM_WIDTH      (32         )
     ) wb_stage (
         .clk                (clk            ),
         // data from mem stage

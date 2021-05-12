@@ -44,8 +44,8 @@ module cprv_id_stage #(
     logic                  rd_en_ex_o_r;
     logic                  rd_en_ex_o_rin;
     
-    logic [W_WIDTH-1:0]    imm_data_ex_o_r;
-    logic [W_WIDTH-1:0]    imm_data_ex_o_rin;
+    logic [IMM_WIDTH-1:0]    imm_data_ex_o_r;
+    logic [IMM_WIDTH-1:0]    imm_data_ex_o_rin;
 
     logic                  mem_w_en_ex_o_r;
     logic                  mem_w_en_ex_o_rin;
@@ -72,10 +72,10 @@ module cprv_id_stage #(
                 default     : rd_en_ex_o_rin = 0;
             endcase
             case(opcode_ex_o_rin)
-                OP_IMM      : imm_data_ex_o_rin = W_WIDTH'(signed'(instr_data_id_i[31:20]));
-                OP_IMM_32   : imm_data_ex_o_rin = W_WIDTH'(signed'(instr_data_id_i[31:20]));
-                LOAD        : imm_data_ex_o_rin = W_WIDTH'(signed'(instr_data_id_i[31:20]));
-                STORE       : imm_data_ex_o_rin = W_WIDTH'(signed'({instr_data_id_i[31:25], instr_data_id_i[11:7]}))
+                OP_IMM      : imm_data_ex_o_rin = IMM_WIDTH'(signed'(instr_data_id_i[31:20]));
+                OP_IMM_32   : imm_data_ex_o_rin = IMM_WIDTH'(signed'(instr_data_id_i[31:20]));
+                LOAD        : imm_data_ex_o_rin = IMM_WIDTH'(signed'(instr_data_id_i[31:20]));
+                STORE       : imm_data_ex_o_rin = IMM_WIDTH'(signed'({instr_data_id_i[31:25], instr_data_id_i[11:7]}))
                 default     : imm_data_ex_o_rin = '0;
             endcase
             opcode_ex_o_rin     = instr_data_id_i[6:0];

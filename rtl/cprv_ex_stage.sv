@@ -1,4 +1,6 @@
 module cprv_ex_stage #(
+    parameter DATA_WIDTH    = 64,
+    parameter IMM_WIDTH     = 32
 )(
     input   logic                   clk,
 
@@ -8,7 +10,7 @@ module cprv_ex_stage #(
     input   logic [DATA_WIDTH-1:0]  rs2_data_ex_i,
     input   logic [4:0]             rd_addr_ex_i,
     input   logic                   rd_en_ex_i,
-    input   logic [WORD_WIDTH-1:0]  imm_data_ex_i,
+    input   logic [IMM_WIDTH-1:0]   imm_data_ex_i,
     input   logic [6:0]             opcode_ex_i,
     input   logic [2:0]             funct3_ex_i,
     input   logic [6:0]             funct7_ex_i,
@@ -20,7 +22,7 @@ module cprv_ex_stage #(
     output  logic [DATA_WIDTH-1:0]  rs2_data_mem_o,
     output  logic [4:0]             rd_addr_mem_o,
     output  logic                   rd_en_mem_o,
-    output  logic [WORD_WIDTH-1:0]  imm_data_mem_o,
+    output  logic [IMM_WIDTH-1:0]  imm_data_mem_o,
     output  logic [6:0]             opcode_mem_o,
     output  logic [2:0]             funct3_mem_o,
     output  logic [6:0]             funct7_mem_o,
@@ -39,8 +41,8 @@ module cprv_ex_stage #(
     logic                   rd_en_mem_o_r;
     logic                   rd_en_mem_o_rin;
 
-    logic [W_WIDTH-1:0]    imm_data_mem_o_r;
-    logic [W_WIDTH-1:0]    imm_data_mem_o_rin;
+    logic [IMM_WIDTH-1:0]    imm_data_mem_o_r;
+    logic [IMM_WIDTH-1:0]    imm_data_mem_o_rin;
 
     logic                  mem_w_en_mem_o_r;
     logic                  mem_w_en_mem_o_rin;
@@ -57,6 +59,8 @@ module cprv_ex_stage #(
     logic [DATA_WIDTH-1:0]  alu_out_mem_o_rin;
 
     cprv_alu #(
+        .DATA_WIDTH (DATA_WIDTH ),
+        .IMM_WIDTH  (IMM_WIDTH  )
     ) alu (
         .opcode (opcode_ex_i    ),
         .funct3 (funct3_ex_i    ),

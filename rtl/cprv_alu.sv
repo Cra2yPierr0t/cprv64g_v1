@@ -1,4 +1,12 @@
 module cprv_alu #(
+    parameter OPCODE_WIDTH  = 7,
+    parameter FUNCT3_WIDTH  = 3,
+    parameter FUNCT7_WIDTH  = 7,
+    parameter DATA_WIDTH    = 64,
+    parameter IMM_WIDTH     = 32,
+    parameter REGADDR_WIDTH = 5,
+    parameter DW_WIDTH      = 64,
+    parameter W_WIDTH       = 32
 )(
     input   logic [OPCODE_WIDTH-1:0]    opcode,
     input   logic [FUNCT3_WIDTH-1:0]    funct3,

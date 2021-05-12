@@ -1,4 +1,6 @@
 module cprv_wb_stage #(
+    parameter DATA_WIDTH    = 64,
+    parameter IMM_WIDTH     = 32
 )(
     input   logic                   clk,
 
@@ -9,7 +11,7 @@ module cprv_wb_stage #(
     input   logic [DATA_WIDTH-1:0]  rs2_data_wb_i,
     input   logic [4:0]             rd_addr_wb_i,
     input   logic                   rd_en_wb_i,
-    input   logic [WORD_WIDTH-1:0]  imm_data_wb_i,
+    input   logic [IMM_WIDTH-1:0]   imm_data_wb_i,
     input   logic [6:0]             opcode_wb_i,
     input   logic [2:0]             funct3_wb_i,
     input   logic [6:0]             funct7_wb_i,

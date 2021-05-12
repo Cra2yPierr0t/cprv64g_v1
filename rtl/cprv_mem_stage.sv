@@ -7,7 +7,9 @@
 // store命令なら to dmemのデータ転送完了と from wbのready待ち合わせ
 // load命令なら to dmemのデータ転送完了と from dmemのデータ転送完了と from wbのreadyを待ち合わせ
 
-module cprv_mem_stage #(
+module cprv_mem_stage #( 
+    parameter DATA_WIDTH    = 64,
+    parameter IMM_WIDTH     = 32
 )(
     input   logic                   clk,
     // data from ex stage
@@ -17,7 +19,7 @@ module cprv_mem_stage #(
     input   logic [DATA_WIDTH-1:0]  rs2_data_mem_i,
     input   logic [4:0]             rd_addr_mem_i,
     input   logic                   rd_en_mem_i,
-    input   logic [WORD_WIDTH-1:0]  imm_data_mem_i,
+    input   logic [IMM_WIDTH-1:0]   imm_data_mem_i,
     input   logic [6:0]             opcode_mem_i,
     input   logic [2:0]             funct3_mem_i,
     input   logic [6:0]             funct7_mem_i,
@@ -30,7 +32,7 @@ module cprv_mem_stage #(
     output  logic [DATA_WIDTH-1:0]  rs2_data_wb_o,
     output  logic [4:0]             rd_addr_wb_o,
     output  logic                   rd_en_wb_o,
-    output  logic [WORD_WIDTH-1:0]  imm_data_wb_o,
+    output  logic [IMM_WIDTH-1:0]   imm_data_wb_o,
     output  logic [6:0]             opcode_wb_o,
     output  logic [2:0]             funct3_wb_o,
     output  logic [6:0]             funct7_wb_o,
@@ -63,8 +65,8 @@ module cprv_mem_stage #(
     logic                   rd_en_wb_o_r;
     logic                   rd_en_wb_o_rin;
 
-    logic [W_WIDTH-1:0]     imm_data_wb_o_r;
-    logic [W_WIDTH-1:0]     imm_data_wb_o_rin;
+    logic [IMM_WIDTH-1:0]   imm_data_wb_o_r;
+    logic [IMM_WIDTH-1:0]   imm_data_wb_o_rin;
 
     logic                   w_en_wb_o_r;
     logic                   w_en_wb_o_rin;
