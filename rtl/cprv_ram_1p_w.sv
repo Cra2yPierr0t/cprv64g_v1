@@ -12,10 +12,10 @@ module cprv_ram_1p_w #(
     
     output  logic                  valid_o,
     input   logic                  ready_i,
-    output  logic [DATA_WIDTH-1:0] rdata,
+    output  logic [DATA_WIDTH-1:0] rdata
 );
 
-    logic cke;
+    logic cke = 0;
 
     logic valid_o_r = 0;
     logic valid_o_rin;

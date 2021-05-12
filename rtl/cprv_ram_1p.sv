@@ -1,6 +1,6 @@
 module cprv_ram_1p #(
     parameter ADDR_WIDTH    = 7,
-    parameter DATA_WIDTH    = 64,
+    parameter DATA_WIDTH    = 64
 )(
     input   logic                  clk,
     input   logic                  w_en,

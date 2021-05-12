@@ -1,5 +1,5 @@
 module cprv_if_stage #(
-    parameter ISNTR_WIDTH   = 32,
+    parameter INSTR_WIDTH   = 32,
     parameter DATA_WIDTH    = 64
 )(
     input   logic                  clk,
@@ -17,7 +17,7 @@ module cprv_if_stage #(
     output  logic [INSTR_WIDTH-1:0]instr_data_id_o
 );
 
-    logic cke_id, cke_imem;
+    logic cke;
 
     logic [INSTR_WIDTH-1:0] instr_addr_r = '0;
     logic [INSTR_WIDTH-1:0] instr_addr_rin;
@@ -25,7 +25,7 @@ module cprv_if_stage #(
     // update program counter
     always_comb begin
         if(valid_imem_o & ready_imem_i) begin
-            instr_addr_rin  = instr_addr_r + '4;
+            instr_addr_rin  = instr_addr_r + 4;
         end
         instr_addr_imem_o   = instr_addr_r;
     end
@@ -36,7 +36,7 @@ module cprv_if_stage #(
 
     // send instruction to id stage
     always_ff @(posedge clk) begin
-        if(cke_id) begin
+        if(cke) begin
             valid_id_o      <= valid_if_i;
             instr_data_id_o <= instr_data_imem_i;
         end

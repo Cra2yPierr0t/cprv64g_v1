@@ -1,6 +1,6 @@
 module cprv_cpu #(
     parameter DATA_WIDTH = 64,
-    parameter ADDR_WIDTH = 7,
+    parameter ADDR_WIDTH = 7
 )(
     input   logic                  clk,
     
@@ -20,7 +20,7 @@ module cprv_cpu #(
     input   logic                  ready_dmem,
     output  logic [ADDR_WIDTH-1:0] addr_dmem,
     output  logic [DATA_WIDTH-1:0] wdata_dmem,
-    output  logic                  w_en_dmem,
+    output  logic                  w_en_dmem
 );
 
     logic [DATA_WIDTH-1:0] instr_addr_r;
@@ -47,17 +47,6 @@ module cprv_cpu #(
     logic [DATA_WIDTH-1:0] rs1_data_wb_r;
     logic [DATA_WIDTH-1:0] rs2_data_wb_r;
 
-    logic                  valid_ex;
-    logic                  ready_ex;
-    logic [DATA_WIDTH-1:0] rs1_data_ex;
-    logic [DATA_WIDTH-1:0] rs2_data_ex;
-    logic [4:0]            rd_addr_ex;
-    logic                  rd_en_ex;
-    logic [DATA_WIDTH-1:0] imm_data_ex;
-    logic [6:0]            opcode_ex;
-    logic [2:0]            funct3_ex;
-    logic [2:0]            funct7_ex;
-    logic                  mem_w_en_ex;
 
     logic                  valid_mem;
     logic                  ready_mem;
@@ -101,7 +90,7 @@ module cprv_cpu #(
         // data to id stage
         .valid_id_o         (valid_id       ),
         .ready_id_i         (ready_id       ),
-        .instr_data_id_o    (instr_data_id  ),
+        .instr_data_id_o    (instr_data_id  )
     );
 
     cprv_id_stage #(
@@ -130,7 +119,7 @@ module cprv_cpu #(
         .rs1_addr_wb_o      (rs1_addr_wb    ),
         .rs2_addr_wb_o      (rs2_addr_wb    ),
         .rs1_data_wb_i      (rs1_data_wb_r  ),
-        .rs2_data_wb_i      (rs2_data_wb_r  ),
+        .rs2_data_wb_i      (rs2_data_wb_r  )
     );
 
     cprv_ex_stage #(
@@ -162,7 +151,7 @@ module cprv_cpu #(
         .funct3_mem_o       (funct3_mem     ),
         .funct7_mem_o       (funct7_mem     ),
         .mem_w_en_mem_o     (mem_w_en_mem   ),
-        .alu_out_mem_o      (alu_out_mem    ),
+        .alu_out_mem_o      (alu_out_mem    )
     );
 
     cprv_mem_stage #(
@@ -205,7 +194,7 @@ module cprv_cpu #(
         .ready_dmem_i       (ready_dmem     ),
         .addr_dmem_o        (addr_dmem      ),
         .wdata_dmem_o       (wdata_dmem     ),
-        .w_en_dmem_o        (w_en_dmem      ),
+        .w_en_dmem_o        (w_en_dmem      )
     );
 
     cprv_wb_stage #(
@@ -230,7 +219,7 @@ module cprv_cpu #(
         .rs1_addr_wb_i      (rs1_addr_wb    ),
         .rs2_addr_wb_i      (rs2_addr_wb    ),
         .rs1_data_wb_o      (rs1_data_wb_r  ),
-        .rs2_data_wb_o      (rs2_data_wb_r  ),
+        .rs2_data_wb_o      (rs2_data_wb_r  )
     );
 
 endmodule

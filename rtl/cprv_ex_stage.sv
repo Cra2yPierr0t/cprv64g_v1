@@ -27,7 +27,7 @@ module cprv_ex_stage #(
     output  logic [2:0]             funct3_mem_o,
     output  logic [6:0]             funct7_mem_o,
     output  logic                   mem_w_en_mem_o,
-    output  logic [DATA_WIDTH-1:0]  alu_out_mem_o,
+    output  logic [DATA_WIDTH-1:0]  alu_out_mem_o
 );
 
     logic cke_mem;
@@ -104,7 +104,7 @@ module cprv_ex_stage #(
         opcode_mem_o    = opcode_mem_o_r;
         funct3_mem_o    = funct3_mem_o_r;
         funct7_mem_o    = funct7_mem_o_r;
-        mem_w_en_mem_o  = mem_w_en_mem_r;
+        mem_w_en_mem_o  = mem_w_en_mem_o_r;
     end
     always_ff @(posedge clk) begin
         valid_mem_o     <= valid_ex_i;
@@ -112,12 +112,12 @@ module cprv_ex_stage #(
         rs1_data_mem_o_r<= rs1_data_mem_o_rin;
         rs2_data_mem_o_r<= rs2_data_mem_o_rin;
         rd_addr_mem_o_r <= rd_addr_mem_o_rin;
-        rd_w_en_mem_o_r <= rd_w_en_mem_o_rin;
+        rd_en_mem_o_r <= rd_en_mem_o_rin;
         imm_data_mem_o_r<= imm_data_mem_o_rin;
         opcode_mem_o_r  <= opcode_mem_o_rin;
         funct3_mem_o_r  <= funct3_mem_o_rin;
         funct7_mem_o_r  <= funct7_mem_o_rin;
-        mem_w_en_mem_o_r<= mem_en_mem_o_rin;
+        mem_w_en_mem_o_r<= mem_w_en_mem_o_rin;
     end
     always_comb begin
         cke_mem     = ~valid_mem_o | ready_mem_i;

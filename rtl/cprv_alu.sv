@@ -15,7 +15,7 @@ module cprv_alu #(
     input   logic [DATA_WIDTH-1:0]      data2,
     input   logic [IMM_WIDTH-1:0]       imm,
     input   logic [REGADDR_WIDTH-1:0]   rd,
-    output  logic [DATA_WIDTH-1:0]      alu_out,
+    output  logic [DATA_WIDTH-1:0]      alu_out
 );
 
     parameter OP        = 7'b01_100_11;
@@ -27,8 +27,6 @@ module cprv_alu #(
 
     parameter ADD_SRL   = 7'b0000000;
     parameter SUB_SRA   = 7'b0100000;
-    parameter ADDW_SRLW = 7'b0000000;
-    parameter SUBW_SRAW = 7'b0100000;
 
     parameter ADD_OP    = 3'b000;
     parameter SLL_OP    = 3'b001;
@@ -83,18 +81,19 @@ module cprv_alu #(
                             ADD_OP  : alu_out = signed'(data1) + signed'(data2);
                             SLL_OP  : alu_out = data1 >> data2;
                             SLT_OP  : alu_out = DW_WIDTH'(signed'(data2) > signed'(data1));
-                            SLTU_OP : alu_out = DW_WIDHT'(unsigned'(data2) > unsigned'(data1));
+                            SLTU_OP : alu_out = DW_WIDTH'(unsigned'(data2) > unsigned'(data1));
                             XOR_OP  : alu_out = data1 ^ data2;
                             OR_OP   : alu_out = data1 | data2;
                             AND_OP  : alu_out = data1 & data2;
                             SRL_OP  : alu_out = data1 >> DW_WIDTH'(data2[4:0]);
+                            default : alu_out = 'hx;
                         endcase
                     end
                     SUB_SRA : begin
                         case(funct3)
                             SUB_OP  : alu_out = signed'(data1) - signed'(data2);
                             SRA_OP  : alu_out = data1 >>> DW_WIDTH'(data2[4:0]);
-                            default :
+                            default : alu_out = 'hx;
                         endcase
                     end
                     // RV64M
@@ -140,7 +139,7 @@ module cprv_alu #(
                         case(funct7)
                             SRLI : alu_out = data1 >> DW_WIDTH'(imm[4:0]);
                             SRAI : alu_out = data1 >>> DW_WIDTH'(imm[4:0]);
-                            default :
+                            default : alu_out = 'hx;
                         endcase
                     end
                 endcase
@@ -152,15 +151,15 @@ module cprv_alu #(
                         case(funct3)
                             ADDW_OP : alu_out = DW_WIDTH'(signed'(W_WIDTH'(data1 + data2)));
                             SLLW_OP : alu_out = DW_WIDTH'(signed'(W_WIDTH'(data1 << DW_WIDTH'(data2[4:0]))));
-                            SRLW_OP : alu_out = DW_WIDTH'(signed'(W_WIDTH(data1 >> DW_WIDTH'(data2[4:0]))));
-                            default :
+                            SRLW_OP : alu_out = DW_WIDTH'(signed'(W_WIDTH'(data1 >> DW_WIDTH'(data2[4:0]))));
+                            default : alu_out = 'hx;
                         endcase
                     end
                     SUBW_SRAW : begin
                         case(funct3)
                             SUBW_OP : alu_out = DW_WIDTH'(signed'(W_WIDTH'(data1 - data2)));
-                            SRAW_OP : alu_out = DW_WIDTH'(signed'(W_WIDTH(data1 >>> DW_WIDTH'(data2[4:0]))));
-                            default : 
+                            SRAW_OP : alu_out = DW_WIDTH'(signed'(W_WIDTH'(data1 >>> DW_WIDTH'(data2[4:0]))));
+                            default : alu_out = 'hx;
                         endcase
                     end
                     // RV64M
@@ -177,7 +176,7 @@ module cprv_alu #(
                         default :
                     end
                     */
-                    default :
+                    default : alu_out = 'hx;
                 endcase
             end
             OP_IMM_32   : begin
@@ -187,12 +186,12 @@ module cprv_alu #(
                     SLLIW_OP : alu_out = DW_WIDTH'(signed'(W_WIDTH'(data1 << DW_WIDTH'(imm[4:0]))));
                     SRLIW_SRAIW : begin
                         case(funct7)
-                            SRLIW_OP : alu_out = DW_WIDTH'(signed'(W_WIDTH(data1 >> DW_WIDTH'(imm[4:0]))));
-                            SRAIW_OP : alu_out = DW_WIDTH'(signed'(W_WIDTH(data1 >>> DW_WIDTH'(imm[4:0]))));
-                            default  :
+                            SRLIW_OP : alu_out = DW_WIDTH'(signed'(W_WIDTH'(data1 >> DW_WIDTH'(imm[4:0]))));
+                            SRAIW_OP : alu_out = DW_WIDTH'(signed'(W_WIDTH'(data1 >>> DW_WIDTH'(imm[4:0]))));
+                            default : alu_out = 'hx;
                         endcase
                     end
-                    default  :
+                    default : alu_out = 'hx;
                 endcase
             end
             LOAD    : begin
@@ -201,7 +200,7 @@ module cprv_alu #(
             STORE   : begin
                 alu_out = signed'(data1) + DW_WIDTH'(signed'({funct7,rd}));
             end
-            default :
+            default : alu_out = 'hx;
         endcase
     end
 endmodule

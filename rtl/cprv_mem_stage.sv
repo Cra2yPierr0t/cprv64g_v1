@@ -38,7 +38,7 @@ module cprv_mem_stage #(
     output  logic [6:0]             funct7_wb_o,
     output  logic                   w_en_wb_o,
     output  logic [DATA_WIDTH-1:0]  alu_out_wb_o,
-    output  logic [DATA_WIDTH-1:0]  mem_data_wb_o;
+    output  logic [DATA_WIDTH-1:0]  mem_data_wb_o,
     // data from data mem
     input   logic                   valid_mem_dmem_i,
     output  logic                   ready_mem_dmem_o,
@@ -150,7 +150,7 @@ module cprv_mem_stage #(
         opcode_wb_o     = opcode_wb_o_r;
         funct3_wb_o     = funct3_wb_o_r;
         funct7_wb_o     = funct7_wb_o_r;
-        w_en_wb_o       = w_en_wb_r;
+        w_en_wb_o       = w_en_wb_o_r;
     end
     always_ff @(posedge clk) begin
         valid_wb_o_r    <= valid_wb_o_rin;
@@ -159,7 +159,7 @@ module cprv_mem_stage #(
         rs1_data_wb_o_r <= rs1_data_wb_o_rin;
         rs2_data_wb_o_r <= rs2_data_wb_o_rin;
         rd_addr_wb_o_r  <= rd_addr_wb_o_rin;
-        rd_w_en_wb_o_r  <= rd_w_en_wb_o_rin;
+        rd_en_wb_o_r    <= rd_en_wb_o_rin;
         imm_data_wb_o_r <= imm_data_wb_o_rin;
         opcode_wb_o_r   <= opcode_wb_o_rin;
         funct3_wb_o_r   <= funct3_wb_o_rin;

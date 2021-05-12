@@ -1,7 +1,27 @@
-module cprv_top #(
-)(
+module cprv_top (
     input   logic       clk
 );
+
+    logic                   valid_instr_d;
+    logic                   ready_instr_d;
+    logic [31:0]            data_instr_d;
+
+    logic                   valid_instr_a;
+    logic                   ready_instr_a;
+    logic [31:0]            addr_instr_a;
+
+    logic                   valid_data_r;
+    logic                   ready_data_r;
+    logic [63:0]            data_data_r;
+
+    logic                   valid_data_w;
+    /* verilator lint_off UNOPTFLAT */
+    logic                   ready_data_w;
+    /* verilator lint_on UNOPTFLAT */
+    logic [63:0]            addr_data_w;
+    logic [63:0]            data_data_w;
+    logic                   w_en_data_w;
+
 
     cprv_cpu #(
         .DATA_WIDTH     (64     ),
