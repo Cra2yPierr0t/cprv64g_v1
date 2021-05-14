@@ -37,6 +37,8 @@ module cprv_wb_stage #(
     end
 
     cprv_regfile #(
+        .DATA_WIDTH     (DATA_WIDTH ),
+        .REGADDR_WIDTH  (5          )
     ) regfile (
         .clk        (clk            ),
         .rs1_addr   (rs1_addr_wb_i  ),
