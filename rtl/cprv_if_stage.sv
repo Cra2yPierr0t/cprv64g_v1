@@ -26,6 +26,8 @@ module cprv_if_stage #(
     always_comb begin
         if(valid_imem_o & ready_imem_i) begin
             instr_addr_rin  = instr_addr_r + 4;
+        end else begin
+            instr_addr_rin  = instr_addr_r;
         end
         instr_addr_imem_o   = instr_addr_r;
     end
