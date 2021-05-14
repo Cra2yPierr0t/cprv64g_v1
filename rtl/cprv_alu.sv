@@ -123,6 +123,7 @@ module cprv_alu #(
                         endcase
                     end
                     */
+                    default : alu_out = 'hx;
                 endcase
             end
             OP_IMM      : begin
@@ -142,7 +143,8 @@ module cprv_alu #(
                             default : alu_out = 'hx;
                         endcase
                     end
-                endcase
+                    default : alu_out = 'hx;
+					 endcase
             end
             OP_32       : begin
                 case(funct7)
