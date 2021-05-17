@@ -52,6 +52,21 @@ module cprv_mem_stage #(
 );
     parameter LOAD      = 7'b00_000_11;
     parameter STORE     = 7'b01_000_11;
+    
+    parameter DW_WIDTH  = 64;
+
+    parameter LB        = 3'b000;
+    parameter LH        = 3'b001;
+    parameter LW        = 3'b010;
+    parameter LBU       = 3'b100;
+    parameter LHU       = 3'b101;
+    parameter LWU       = 3'b110;
+    parameter LD        = 3'b011;
+
+    parameter SB        = 3'b000;
+    parameter SH        = 3'b001;
+    parameter SW        = 3'b010;
+    parameter SD        = 3'b011;
 
     logic                   cke_wb;
     logic                   cke_dmem;
@@ -114,7 +129,16 @@ module cprv_mem_stage #(
             funct3_wb_o_rin    = funct3_mem_i;
             funct7_wb_o_rin    = funct7_mem_i;
             w_en_wb_o_rin      = mem_w_en_mem_i;
-            mem_data_wb_o_rin  = rdata_dmem_i;
+            case(funct3_mem_i)
+                LB  : mem_data_wb_o_rin = DW_WIDTH'(signed'(rdata_dmem_i[7:0]));
+                LH  : mem_data_wb_o_rin = DW_WIDTH'(signed'(rdata_dmem_i[15:0]));
+                LW  : mem_data_wb_o_rin = DW_WIDTH'(signed'(rdata_dmem_i[31:0]));
+                LBU : mem_data_wb_o_rin = DW_WIDTH'(unsigned'(rdata_dmem_i[7:0]));
+                LHU : mem_data_wb_o_rin = DW_WIDTH'(unsigned'(rdata_dmem_i[15:0]));
+                LWU : mem_data_wb_o_rin = DW_WIDTH'(unsigned'(rdata_dmem_i[31:0]));
+                LD  : mem_data_wb_o_rin = rdata_dmem_i;
+                default : mem_data_wb_o_rin = 'hx;
+            endcase
         end else begin
             valid_wb_o_rin     = valid_wb_o_r;
             alu_out_wb_o_rin   = alu_out_wb_o_r;
@@ -132,7 +156,14 @@ module cprv_mem_stage #(
         if(cke_dmem) begin
             valid_dmem_o_rin   = valid_mem_i;
             addr_dmem_o_rin    = alu_out_mem_i;
-            wdata_dmem_o_rin   = rs2_data_mem_i;
+            //wdata_dmem_o_rin   = rs2_data_mem_i;
+            case(funct3_mem_i)
+                SB  : wdata_dmem_o_rin = DW_WIDTH'(unsigned'(rs2_data_mem_i[7:0]));
+                SH  : wdata_dmem_o_rin = DW_WIDTH'(unsigned'(rs2_data_mem_i[15:0]));
+                SW  : wdata_dmem_o_rin = DW_WIDTH'(unsigned'(rs2_data_mem_i[31:0]));
+                SD  : wdata_dmem_o_rin = rs2_data_mem_i;
+                default : wdata_dmem_o_rin = 'hx;
+            endcase
             w_en_dmem_o_rin    = mem_w_en_mem_i;
         end else begin
             valid_dmem_o_rin   = valid_dmem_o_r;
