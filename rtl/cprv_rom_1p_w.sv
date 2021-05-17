@@ -20,8 +20,7 @@ module cprv_rom_1p_w #(
     logic valid_o_r = 0;
     logic valid_o_rin;
 
-    /*
-    cprv_ram_1p #(
+    cprv_rom_1p #(
         .ADDR_WIDTH (ADDR_WIDTH),
         .DATA_WIDTH (DATA_WIDTH)
     ) ram (
@@ -31,8 +30,6 @@ module cprv_rom_1p_w #(
         .wdata  (wdata  ),
         .rdata  (rdata  )
     );
-    */
-   assign rdata = 32'b000000000001_00001_000_00001_0010011;
     
     always_comb begin
         if(cke) begin
