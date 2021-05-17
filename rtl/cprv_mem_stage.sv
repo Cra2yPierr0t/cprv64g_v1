@@ -153,6 +153,7 @@ module cprv_mem_stage #(
         w_en_wb_o       = w_en_wb_o_r;
         alu_out_wb_o    = alu_out_wb_o_r;
         w_en_dmem_o     = w_en_dmem_o_r;
+        wdata_dmem_o    = wdata_dmem_o_r;
     end
     always_ff @(posedge clk) begin
         valid_wb_o_r    <= valid_wb_o_rin;
@@ -169,6 +170,7 @@ module cprv_mem_stage #(
         funct7_wb_o_r   <= funct7_wb_o_rin;
         w_en_wb_o_r     <= w_en_wb_o_rin;
         mem_data_wb_o_r <= mem_data_wb_o_rin;
+        wdata_dmem_o_r  <= wdata_dmem_o_rin;
     end
     always_comb begin
         cke_wb          = ~valid_wb_o | ready_wb_i;
