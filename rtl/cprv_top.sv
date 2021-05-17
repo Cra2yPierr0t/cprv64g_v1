@@ -70,9 +70,9 @@ module cprv_top (
         .clk        (clk            ),
         .valid_i    (valid_data_w   ),
         .ready_o    (ready_data_w   ),
-        .w_en       (addr_data_w    ),
-        .addr       (data_data_w    ),
-        .wdata      (w_en_data_w    ),
+        .w_en       (w_en_data_w    ),
+        .addr       (addr_data_w    ),
+        .wdata      (data_data_w    ),
 
         .valid_o    (valid_data_r   ),
         .ready_i    (ready_data_r   ),
