@@ -85,8 +85,8 @@ module cprv_mem_stage #(
     logic [DATA_WIDTH-1:0]  addr_dmem_o_rin;
     logic [DATA_WIDTH-1:0]  wdata_dmem_o_r;
     logic [DATA_WIDTH-1:0]  wdata_dmem_o_rin;
-    logic [DATA_WIDTH-1:0]  w_en_dmem_o_r;
-    logic [DATA_WIDTH-1:0]  w_en_dmem_o_rin;
+    logic                   w_en_dmem_o_r;
+    logic                   w_en_dmem_o_rin;
 
     logic [DATA_WIDTH-1:0]  mem_data_wb_o_r;
     logic [DATA_WIDTH-1:0]  mem_data_wb_o_rin;
@@ -152,10 +152,12 @@ module cprv_mem_stage #(
         funct7_wb_o     = funct7_wb_o_r;
         w_en_wb_o       = w_en_wb_o_r;
         alu_out_wb_o    = alu_out_wb_o_r;
+        w_en_dmem_o     = w_en_dmem_o_r;
     end
     always_ff @(posedge clk) begin
         valid_wb_o_r    <= valid_wb_o_rin;
         valid_dmem_o_r  <= valid_dmem_o_rin;
+        w_en_dmem_o_r   <= w_en_dmem_o_rin;
         alu_out_wb_o_r  <= alu_out_wb_o_rin;
         rs1_data_wb_o_r <= rs1_data_wb_o_rin;
         rs2_data_wb_o_r <= rs2_data_wb_o_rin;
