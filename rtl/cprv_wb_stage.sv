@@ -44,17 +44,29 @@ module cprv_wb_stage #(
         .rs1_addr   (rs1_addr_wb_i  ),
         .rs2_addr   (rs2_addr_wb_i  ),
         .rd_addr    (rd_addr_wb_i   ),
-        .rd_en      (rd_en_wb_i     ),
+        .rd_en      (rd_en_wb_i & valid_wb_i),
         .rs1_data   (rs1_data_wb_o  ),
         .rs2_data   (rs2_data_wb_o  ),
         .rd_data    (rd_data        )
     );
 
     always @(posedge clk) begin
+        /*
         if(~ready_wb_o) begin
             ready_wb_o <= 1;
         end else if(valid_wb_i) begin
             ready_wb_o <= 0;
         end
+        */
+    end
+    always_comb begin
+        /*
+        if(valid_wb_i) begin
+            ready_wb_o = 1;
+        end else begin
+            ready_wb_o = 0;
+        end
+        */
+        ready_wb_o = 1;
     end
 endmodule

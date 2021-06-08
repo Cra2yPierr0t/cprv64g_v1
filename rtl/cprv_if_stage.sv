@@ -24,16 +24,17 @@ module cprv_if_stage #(
 
     // update program counter
     always_comb begin
-        if(valid_imem_o & ready_imem_i) begin
+        //if(valid_imem_o & ready_imem_i) begin
+        if(ready_imem_i) begin
             instr_addr_rin  = instr_addr_r + 4;
         end else begin
             instr_addr_rin  = instr_addr_r;
         end
         instr_addr_imem_o   = instr_addr_r;
+        valid_imem_o = 1;
     end
     always_ff @(posedge clk) begin
         instr_addr_r <= instr_addr_rin;
-        valid_imem_o <= 1;
     end
 
     // send instruction to id stage

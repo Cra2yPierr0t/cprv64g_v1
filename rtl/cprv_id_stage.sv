@@ -20,6 +20,8 @@ module cprv_id_stage #(
     output  logic [2:0]             funct3_ex_o,
     output  logic [6:0]             funct7_ex_o,
     output  logic                   mem_w_en_ex_o,
+    output  logic [4:0]             rs1_addr_ex_o,
+    output  logic [4:0]             rs2_addr_ex_o,
     // data for wb stage
     output  logic [4:0]             rs1_addr_wb_o,
     output  logic [4:0]             rs2_addr_wb_o,
@@ -43,6 +45,10 @@ module cprv_id_stage #(
     logic [4:0]            rd_addr_ex_o_rin;
     logic                  rd_en_ex_o_r;
     logic                  rd_en_ex_o_rin;
+    logic [4:0]            rs1_addr_ex_o_r;
+    logic [4:0]            rs1_addr_ex_o_rin;
+    logic [4:0]            rs2_addr_ex_o_r;
+    logic [4:0]            rs2_addr_ex_o_rin;
     
     logic [IMM_WIDTH-1:0]    imm_data_ex_o_r;
     logic [IMM_WIDTH-1:0]    imm_data_ex_o_rin;
@@ -63,6 +69,8 @@ module cprv_id_stage #(
             rs1_data_ex_o_rin   = rs1_data_wb_i;
             rs2_data_ex_o_rin   = rs2_data_wb_i;
             rd_addr_ex_o_rin    = instr_data_id_i[11:7];
+            rs1_addr_ex_o_rin   = instr_data_id_i[19:15];
+            rs2_addr_ex_o_rin   = instr_data_id_i[24:20];
             case(instr_data_id_i[6:0])
                 OP          : rd_en_ex_o_rin = 1;
                 OP_IMM      : rd_en_ex_o_rin = 1;
@@ -88,6 +96,8 @@ module cprv_id_stage #(
         end else begin
             rs1_data_ex_o_rin   = rs1_data_ex_o_r;
             rs2_data_ex_o_rin   = rs2_data_ex_o_r;
+            rs1_addr_ex_o_rin   = rs1_addr_ex_o_r;
+            rs2_addr_ex_o_rin   = rs2_addr_ex_o_r;
             rd_addr_ex_o_rin    = rd_addr_ex_o_r;
             rd_en_ex_o_rin      = rd_en_ex_o_r;
             imm_data_ex_o_rin   = imm_data_ex_o_r;
@@ -98,6 +108,8 @@ module cprv_id_stage #(
         end
         rs1_data_ex_o   = rs1_data_ex_o_r;
         rs2_data_ex_o   = rs2_data_ex_o_r;
+        rs1_addr_ex_o   = rs1_addr_ex_o_r;
+        rs2_addr_ex_o   = rs2_addr_ex_o_r;
         rd_addr_ex_o    = rd_addr_ex_o_r;
         rd_en_ex_o      = rd_en_ex_o_r;
         imm_data_ex_o   = imm_data_ex_o_r;
@@ -113,6 +125,8 @@ module cprv_id_stage #(
         valid_ex_o      <= valid_id_i;
         rs1_data_ex_o_r <= rs1_data_ex_o_rin;
         rs2_data_ex_o_r <= rs2_data_ex_o_rin;
+        rs1_addr_ex_o_r <= rs1_addr_ex_o_rin;
+        rs2_addr_ex_o_r <= rs2_addr_ex_o_rin;
         rd_addr_ex_o_r  <= rd_addr_ex_o_rin;
         rd_en_ex_o_r    <= rd_en_ex_o_rin;
         imm_data_ex_o_r <= imm_data_ex_o_rin;

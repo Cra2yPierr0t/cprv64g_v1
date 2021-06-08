@@ -32,8 +32,12 @@ module cprv_cpu #(
 
     logic                  valid_ex;
     logic                  ready_ex;
-    logic [DATA_WIDTH-1:0] rs1_data_ex;
-    logic [DATA_WIDTH-1:0] rs2_data_ex;
+    logic                  valid_ex_o;
+    logic                  ready_ex_o;
+    logic [DATA_WIDTH-1:0] rs1_data_id_ex; 
+    logic [DATA_WIDTH-1:0] rs2_data_id_ex;
+    logic [4:0]            rs1_addr_ex;
+    logic [4:0]            rs2_addr_ex;
     logic [4:0]            rd_addr_ex;
     logic                  rd_en_ex;
     logic [DATA_WIDTH-1:0] imm_data_ex;
@@ -47,6 +51,8 @@ module cprv_cpu #(
     logic [DATA_WIDTH-1:0] rs1_data_wb_r;
     logic [DATA_WIDTH-1:0] rs2_data_wb_r;
 
+    logic [DATA_WIDTH-1:0] rs1_data_ex; 
+    logic [DATA_WIDTH-1:0] rs2_data_ex;
 
     logic                  valid_mem;
     logic                  ready_mem;
@@ -104,10 +110,12 @@ module cprv_cpu #(
         .ready_id_o         (ready_id       ),
         .instr_data_id_i    (instr_data_id  ),
         // data to ex stage
-        .valid_ex_o         (valid_ex       ),
+        .valid_ex_o         (valid_ex_o     ),
         .ready_ex_i         (ready_ex       ),
-        .rs1_data_ex_o      (rs1_data_ex    ),
-        .rs2_data_ex_o      (rs2_data_ex    ),
+        .rs1_data_ex_o      (rs1_data_id_ex ),
+        .rs2_data_ex_o      (rs2_data_id_ex ),
+        .rs1_addr_ex_o      (rs1_addr_ex    ),
+        .rs2_addr_ex_o      (rs2_addr_ex    ),
         .rd_addr_ex_o       (rd_addr_ex     ),
         .rd_en_ex_o         (rd_en_ex       ),
         .imm_data_ex_o      (imm_data_ex    ),
@@ -122,6 +130,37 @@ module cprv_cpu #(
         .rs2_data_wb_i      (rs2_data_wb_r  )
     );
 
+    cprv_forwarding_mechanism #(
+        .DATA_WIDTH     (DATA_WIDTH)
+    ) forwarding_mechanism (
+        .rs1_addr_ex        (rs1_addr_ex    ),
+        .rs2_addr_ex        (rs2_addr_ex    ),
+        .opcode_mem         (opcode_mem     ),
+        .rd_addr_mem        (rd_addr_mem    ),
+        .rd_en_mem          (rd_en_mem      ),
+        .opcode_wb          (opcode_wb      ),
+        .rd_addr_wb         (rd_addr_wb     ),
+        .rd_en_wb           (rd_en_wb       ),
+        .rs1_data_id_ex     (rs1_data_id_ex ),
+        .rs2_data_id_ex     (rs2_data_id_ex ),
+        .alu_out_mem        (alu_out_mem    ),
+        .alu_out_wb         (alu_out_wb     ),
+        .mem_data_wb        (mem_data_wb    ),
+        .rs1_data_ex        (rs1_data_ex    ),
+        .rs2_data_ex        (rs2_data_ex    )
+    );
+
+    cprv_staller staller (
+        .rs1_addr_ex        (rs1_addr_ex    ),
+        .rs2_addr_ex        (rs2_addr_ex    ),
+        .opcode_mem         (opcode_mem     ),
+        .rd_addr_mem        (rd_addr_mem    ),
+        .valid_ex           (valid_ex_o     ),
+        .ready_ex           (ready_ex_o     ),
+        .valid_ex_o         (valid_ex       ),
+        .ready_ex_o         (ready_ex       )
+    );
+
     cprv_ex_stage #(
         .DATA_WIDTH     (DATA_WIDTH ),
         .IMM_WIDTH      (32         )
@@ -129,7 +168,7 @@ module cprv_cpu #(
         .clk                (clk            ),
         // data from id stage
         .valid_ex_i         (valid_ex       ),
-        .ready_ex_o         (ready_ex       ),
+        .ready_ex_o         (ready_ex_o     ),
         .rs1_data_ex_i      (rs1_data_ex    ),
         .rs2_data_ex_i      (rs2_data_ex    ),
         .rd_addr_ex_i       (rd_addr_ex     ),

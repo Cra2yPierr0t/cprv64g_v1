@@ -15,9 +15,9 @@ module cprv_rom_1p_w #(
     output  logic [DATA_WIDTH-1:0] rdata
 );
 
-    logic cke = 0;
+    logic cke;
 
-    logic valid_o_r = 0;
+    logic valid_o_r;
     logic valid_o_rin;
 
     cprv_rom_1p #(

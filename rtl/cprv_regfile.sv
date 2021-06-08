@@ -20,7 +20,8 @@ module cprv_regfile #(
             mem[rd_addr] <= rd_data;
         end
     end
-    assign rs1_data = mem[rs1_addr];
-    assign rs2_data = mem[rs2_addr];
+    // Sorry
+    assign rs1_data = (rd_addr == rs1_addr) ? rd_data : mem[rs1_addr];
+    assign rs2_data = (rd_addr == rs2_addr) ? rd_data : mem[rs2_addr];
 
 endmodule

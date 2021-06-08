@@ -115,10 +115,16 @@ module cprv_mem_stage #(
     always_comb begin
         if(cke_wb) begin
             case(opcode_mem_i)
+                LOAD    : valid_wb_o_rin     = valid_mem_dmem_i;
+                default : valid_wb_o_rin     = valid_mem_i;
+            endcase
+            /*
+            case(opcode_mem_i)
                 LOAD    : valid_wb_o_rin     = valid_mem_i;
                 STORE   : valid_wb_o_rin     = valid_mem_i & valid_mem_dmem_i;
                 default : valid_wb_o_rin     = valid_mem_i;
             endcase
+            */
             alu_out_wb_o_rin   = alu_out_mem_i;
             rs1_data_wb_o_rin  = rs1_data_mem_i;
             rs2_data_wb_o_rin  = rs2_data_mem_i;
@@ -154,7 +160,12 @@ module cprv_mem_stage #(
             mem_data_wb_o_rin  = mem_data_wb_o_r;
         end
         if(cke_dmem) begin
-            valid_dmem_o_rin   = valid_mem_i;
+            case(opcode_mem_i)
+                LOAD    : valid_dmem_o_rin = valid_mem_i; 
+                STORE   : valid_dmem_o_rin = valid_mem_i; 
+                default : valid_dmem_o_rin = 0;
+            endcase
+            // valid_dmem_o_rin   = valid_mem_i;
             addr_dmem_o_rin    = alu_out_mem_i;
             //wdata_dmem_o_rin   = rs2_data_mem_i;
             case(funct3_mem_i)
@@ -185,8 +196,10 @@ module cprv_mem_stage #(
         alu_out_wb_o    = alu_out_wb_o_r;
         w_en_dmem_o     = w_en_dmem_o_r;
         wdata_dmem_o    = wdata_dmem_o_r;
-        mem_data_wb_o   = mem_data_wb_o_r;
+        addr_dmem_o     = addr_dmem_o_r;
+        //mem_data_wb_o   = mem_data_wb_o_r;
     end
+    assign mem_data_wb_o   = mem_data_wb_o_rin;
     always_ff @(posedge clk) begin
         valid_wb_o_r    <= valid_wb_o_rin;
         valid_dmem_o_r  <= valid_dmem_o_rin;
@@ -202,15 +215,32 @@ module cprv_mem_stage #(
         funct7_wb_o_r   <= funct7_wb_o_rin;
         w_en_wb_o_r     <= w_en_wb_o_rin;
         mem_data_wb_o_r <= mem_data_wb_o_rin;
+        addr_dmem_o_r   <= addr_dmem_o_rin;
         wdata_dmem_o_r  <= wdata_dmem_o_rin;
     end
     always_comb begin
-        cke_wb          = ~valid_wb_o | ready_wb_i;
+        // cke_wb          = ~valid_wb_o | ready_wb_i;
         cke_dmem        = ~valid_dmem_o | ready_dmem_i;
+        /*
         case(opcode_mem_i)
             LOAD    : ready_mem_o = cke_wb & cke_dmem;
             STORE   : ready_mem_o = cke_wb & cke_dmem;
             default : ready_mem_o = cke_wb;
+        endcase
+        */
+        case(opcode_mem_i)
+            LOAD    : begin
+                ready_mem_o = valid_mem_dmem_i;
+                cke_wb      = valid_mem_dmem_i;
+            end
+            STORE   : begin
+                ready_mem_o = cke_wb & cke_dmem;
+                cke_wb      = ~valid_wb_o | ready_wb_i;
+            end
+            default : begin
+                ready_mem_o = cke_wb;
+                cke_wb      = ~valid_wb_o | ready_wb_i;
+            end
         endcase
         ready_mem_dmem_o = cke_wb;
     end
