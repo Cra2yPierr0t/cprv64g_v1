@@ -21,7 +21,7 @@ module cprv_forwarding_mechanism #(
     parameter OP_IMM    = 7'b00_100_11;
     parameter OP_32     = 7'b01_110_11;
     parameter OP_IMM_32 = 7'b00_110_11;
-    parameter LOAD      = 7'b01_000_11;
+    parameter LOAD      = 7'b00_000_11;
 
     logic fwd_from_mem1;
     logic fwd_from_mem2;

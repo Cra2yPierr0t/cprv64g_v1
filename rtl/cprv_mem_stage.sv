@@ -114,17 +114,7 @@ module cprv_mem_stage #(
 
     always_comb begin
         if(cke_wb) begin
-            case(opcode_mem_i)
-                LOAD    : valid_wb_o_rin     = valid_mem_dmem_i;
-                default : valid_wb_o_rin     = valid_mem_i;
-            endcase
-            /*
-            case(opcode_mem_i)
-                LOAD    : valid_wb_o_rin     = valid_mem_i;
-                STORE   : valid_wb_o_rin     = valid_mem_i & valid_mem_dmem_i;
-                default : valid_wb_o_rin     = valid_mem_i;
-            endcase
-            */
+            valid_wb_o_rin     = valid_mem_i;
             alu_out_wb_o_rin   = alu_out_mem_i;
             rs1_data_wb_o_rin  = rs1_data_mem_i;
             rs2_data_wb_o_rin  = rs2_data_mem_i;
@@ -135,16 +125,6 @@ module cprv_mem_stage #(
             funct3_wb_o_rin    = funct3_mem_i;
             funct7_wb_o_rin    = funct7_mem_i;
             w_en_wb_o_rin      = mem_w_en_mem_i;
-            case(funct3_mem_i)
-                LB  : mem_data_wb_o_rin = DW_WIDTH'(signed'(rdata_dmem_i[7:0]));
-                LH  : mem_data_wb_o_rin = DW_WIDTH'(signed'(rdata_dmem_i[15:0]));
-                LW  : mem_data_wb_o_rin = DW_WIDTH'(signed'(rdata_dmem_i[31:0]));
-                LBU : mem_data_wb_o_rin = DW_WIDTH'(unsigned'(rdata_dmem_i[7:0]));
-                LHU : mem_data_wb_o_rin = DW_WIDTH'(unsigned'(rdata_dmem_i[15:0]));
-                LWU : mem_data_wb_o_rin = DW_WIDTH'(unsigned'(rdata_dmem_i[31:0]));
-                LD  : mem_data_wb_o_rin = rdata_dmem_i;
-                default : mem_data_wb_o_rin = 'hx;
-            endcase
         end else begin
             valid_wb_o_rin     = valid_wb_o_r;
             alu_out_wb_o_rin   = alu_out_wb_o_r;
@@ -157,33 +137,32 @@ module cprv_mem_stage #(
             funct3_wb_o_rin    = funct3_wb_o_r;
             funct7_wb_o_rin    = funct7_wb_o_r;
             w_en_wb_o_rin      = w_en_wb_o_r;
-            mem_data_wb_o_rin  = mem_data_wb_o_r;
         end
-        if(cke_dmem) begin
-            case(opcode_mem_i)
-                LOAD    : valid_dmem_o_rin = valid_mem_i; 
-                STORE   : valid_dmem_o_rin = valid_mem_i; 
-                default : valid_dmem_o_rin = 0;
-            endcase
-            // valid_dmem_o_rin   = valid_mem_i;
-            addr_dmem_o_rin    = alu_out_mem_i;
-            //wdata_dmem_o_rin   = rs2_data_mem_i;
-            case(funct3_mem_i)
-                SB  : wdata_dmem_o_rin = DW_WIDTH'(unsigned'(rs2_data_mem_i[7:0]));
-                SH  : wdata_dmem_o_rin = DW_WIDTH'(unsigned'(rs2_data_mem_i[15:0]));
-                SW  : wdata_dmem_o_rin = DW_WIDTH'(unsigned'(rs2_data_mem_i[31:0]));
-                SD  : wdata_dmem_o_rin = rs2_data_mem_i;
-                default : wdata_dmem_o_rin = 'hx;
-            endcase
-            w_en_dmem_o_rin    = mem_w_en_mem_i;
-        end else begin
-            valid_dmem_o_rin   = valid_dmem_o_r;
-            addr_dmem_o_rin    = addr_dmem_o_r;
-            wdata_dmem_o_rin   = wdata_dmem_o_r;
-            w_en_dmem_o_rin    = w_en_dmem_o_r;
-        end
+        addr_dmem_o = alu_out_mem_i;
+        w_en_dmem_o = mem_w_en_mem_i;
+        case(opcode_mem_i)
+            LOAD    : valid_dmem_o = valid_mem_i; 
+            STORE   : valid_dmem_o = valid_mem_i; 
+            default : valid_dmem_o = 0;
+        endcase
+        case(funct3_mem_i)
+            SB  : wdata_dmem_o = DW_WIDTH'(unsigned'(rs2_data_mem_i[7:0]));
+            SH  : wdata_dmem_o = DW_WIDTH'(unsigned'(rs2_data_mem_i[15:0]));
+            SW  : wdata_dmem_o = DW_WIDTH'(unsigned'(rs2_data_mem_i[31:0]));
+            SD  : wdata_dmem_o = rs2_data_mem_i;
+            default : wdata_dmem_o = 'hx;
+        endcase
+        case(funct3_mem_i) 
+            LB  : mem_data_wb_o = DW_WIDTH'(signed'(rdata_dmem_i[7:0]));
+            LH  : mem_data_wb_o = DW_WIDTH'(signed'(rdata_dmem_i[15:0]));
+            LW  : mem_data_wb_o = DW_WIDTH'(signed'(rdata_dmem_i[31:0]));
+            LBU : mem_data_wb_o = DW_WIDTH'(unsigned'(rdata_dmem_i[7:0]));
+            LHU : mem_data_wb_o = DW_WIDTH'(unsigned'(rdata_dmem_i[15:0]));
+            LWU : mem_data_wb_o = DW_WIDTH'(unsigned'(rdata_dmem_i[31:0]));
+            LD  : mem_data_wb_o = rdata_dmem_i;
+            default : mem_data_wb_o_rin = 'hx;
+        endcase
         valid_wb_o      = valid_wb_o_r;
-        valid_dmem_o    = valid_dmem_o_r;
         rs1_data_wb_o   = rs1_data_wb_o_r;
         rs2_data_wb_o   = rs2_data_wb_o_r;
         rd_addr_wb_o    = rd_addr_wb_o_r;
@@ -194,12 +173,7 @@ module cprv_mem_stage #(
         funct7_wb_o     = funct7_wb_o_r;
         w_en_wb_o       = w_en_wb_o_r;
         alu_out_wb_o    = alu_out_wb_o_r;
-        w_en_dmem_o     = w_en_dmem_o_r;
-        wdata_dmem_o    = wdata_dmem_o_r;
-        addr_dmem_o     = addr_dmem_o_r;
-        //mem_data_wb_o   = mem_data_wb_o_r;
     end
-    assign mem_data_wb_o   = mem_data_wb_o_rin;
     always_ff @(posedge clk) begin
         valid_wb_o_r    <= valid_wb_o_rin;
         valid_dmem_o_r  <= valid_dmem_o_rin;
@@ -219,29 +193,8 @@ module cprv_mem_stage #(
         wdata_dmem_o_r  <= wdata_dmem_o_rin;
     end
     always_comb begin
-        // cke_wb          = ~valid_wb_o | ready_wb_i;
-        cke_dmem        = ~valid_dmem_o | ready_dmem_i;
-        /*
-        case(opcode_mem_i)
-            LOAD    : ready_mem_o = cke_wb & cke_dmem;
-            STORE   : ready_mem_o = cke_wb & cke_dmem;
-            default : ready_mem_o = cke_wb;
-        endcase
-        */
-        case(opcode_mem_i)
-            LOAD    : begin
-                ready_mem_o = valid_mem_dmem_i;
-                cke_wb      = valid_mem_dmem_i;
-            end
-            STORE   : begin
-                ready_mem_o = cke_wb & cke_dmem;
-                cke_wb      = ~valid_wb_o | ready_wb_i;
-            end
-            default : begin
-                ready_mem_o = cke_wb;
-                cke_wb      = ~valid_wb_o | ready_wb_i;
-            end
-        endcase
+        cke_wb      = ~valid_wb_o | ready_wb_i;
+        ready_mem_o = cke_wb;
         ready_mem_dmem_o = cke_wb;
     end
 endmodule
